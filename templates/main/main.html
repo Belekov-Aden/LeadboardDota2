@@ -15,20 +15,22 @@
     <h1 class="text-center">Всемирные таблицы лидеров</h1>
     <ul class="nav justify-content-center">
         <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('read_root', id=id)">Америка</a>
+            <a class="nav-link" href="{{ url_for('read_root', reqion='americas') }}">Америка</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Европа</a>
+            <a class="nav-link" href="{{ url_for('read_root', reqion='europe') }}">Европа</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">ЮВ Азия</a>
+            <a class="nav-link" href="{{ url_for('read_root', reqion='se_asia') }}">ЮВ Азия</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="#">Китай</a>
+            <a class="nav-link" href="{{ url_for('read_root', reqion='china') }}">Китай</a>
         </li>
     </ul>
 </header>
-<main></main>
+<main>
+
+</main>
 <footer></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
