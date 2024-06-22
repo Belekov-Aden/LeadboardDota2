@@ -19,7 +19,7 @@
 1. Склонируйте репозиторий:
    ```sh    
     git clone https://github.com/Belekov-Aden/LeadboardDota2
-    cd dota2-leaderboard
+    cd LeadboardDota2
     ```
 2. Установите необходимые зависимости:
     ```shell
