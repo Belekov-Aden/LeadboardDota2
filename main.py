@@ -16,17 +16,21 @@ templates = Jinja2Templates(directory="templates")
 
 
 @app.get("/", response_class=HTMLResponse)
-async def default_region(request: Request, rank_from: str | int = None, rank_to: str | int = None, country: str = None,
+async def default_region(request: Request, rank_from: int | str = None, rank_to: int | str = None, country: str = None,
                          team: str = None):
     return read_root(request, region='europe', rank_from=rank_from, rank_to=rank_to, country=country, team=team)
 
 
 @app.get("/{region}", response_class=HTMLResponse)
-def read_root(request: Request, region: str, rank_from: str | int = None, rank_to: str | int = None, country: str = None,
-              team: str = None):
+async def read_root(request: Request, region: str, rank_from: int | str = None, rank_to: int | str = None, country: str = None,
+                    team: str = None):
     data: dict = requests.get(
         f'https://www.dota2.com/webapi/ILeaderboard/GetDivisionLeaderboard/v0001?division={region}&leaderboard=0').json()
     leaderboard = data.get('leaderboard')
+
+    next_update_time = datetime.datetime.fromtimestamp(data.get('next_scheduled_post_time')).strftime(
+        '%d.%m.%Y, %H:%M:%S')
+    last_update_time = datetime.datetime.fromtimestamp(data.get('time_posted')).strftime('%d.%m.%Y, %H:%M:%S')
 
     for rank, i in enumerate(leaderboard, start=1):
         i['rank'] = rank
@@ -38,18 +42,17 @@ def read_root(request: Request, region: str, rank_from: str | int = None, rank_t
             leaderboard = [player for player in leaderboard if rank_from <= player.get('rank') <= rank_to]
         except ValueError:
             pass
+
     if country is not None:
         leaderboard = [player for player in leaderboard if
                        player.get('country') and country.lower() in player['country'].lower()]
+
     if team is not None:
         if team == 'yes':
             leaderboard = [player for player in leaderboard if player.get('team_tag')]
         elif team == 'no':
             leaderboard = [player for player in leaderboard if not player.get('team_tag')]
 
-    next_update_time = datetime.datetime.fromtimestamp(data.get('next_scheduled_post_time')).strftime(
-        '%d.%m.%Y, %H:%M:%S')
-    last_update_time = datetime.datetime.fromtimestamp(data.get('time_posted')).strftime('%d.%m.%Y, %H:%M:%S')
     return templates.TemplateResponse(
         request=request, name='main/main.html',
         context={

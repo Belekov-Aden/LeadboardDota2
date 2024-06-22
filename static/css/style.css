@@ -84,3 +84,12 @@ body {
     width: 24px;
     height: 24px;
 }
+
+
+.footer a {
+    color: white !important;
+}
+
+.footer a:hover {
+    color: lightgray !important;
+}
