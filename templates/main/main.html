@@ -28,65 +28,68 @@
             <a class="nav-link" href="{{ url_for('read_root', region='china') }}">Китай</a>
         </li>
     </ul>
-    <div class="filters">
-        <form id="filter-form">
-            <input type="hidden" name="region" value="{{ region }}">
-            <div class="input_count">
-                <label>Ранг:</label>
-                <input type="number" id="rank_from" name="rank_from" placeholder="От" value="{{ rank_from }}">
-                <input type="number" id="rank_to" name="rank_to" placeholder="До" value="{{ rank_to }}">
-            </div>
-            <div class="input_country">
-                <label>Страна:</label>
-                <input type="text" id="country" name="country" placeholder="Страна"
-                       value="{% if country %}{{ country }}{% endif %}">
-            </div>
-            <div class="input_team">
-                <label>Киберспортивная команда:</label>
-                <select id="team" name="team">
-                    <option value="" {% if team == '' %}selected{% endif %}>Все</option>
-                    <option value="yes" {% if team == 'yes' %}selected{% endif %}>Да</option>
-                    <option value="no" {% if team == 'no' %}selected{% endif %}>Нет</option>
-                </select>
-            </div>
-            <button type="submit" class="btn btn-primary">Фильтр</button>
-        </form>
-    </div>
 </header>
 <main>
     <p class="text-center">Количество: {{ data|length }}</p>
-    <table class="tables_own">
-        <thead>
-        <tr>
-            <th scope="col">Позиция в дивизионе</th>
-            <th scope="col">Игрок</th>
-            <th scope="col"></th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for i in data %}
+    <div class="tables_filters">
+        <div class="filters">
+            <form id="filter-form">
+                <input type="hidden" name="region" value="{{ region }}">
+                <div class="input_count">
+                    <label>Ранг:</label>
+                    <input type="number" id="rank_from" name="rank_from" placeholder="От" value="{{ rank_from }}">
+                    <input type="number" id="rank_to" name="rank_to" placeholder="До" value="{{ rank_to }}">
+                </div>
+                <div class="input_country">
+                    <label>Страна:</label>
+                    <input type="text" id="country" name="country" placeholder="Страна"
+                           value="{% if country %}{{ country }}{% endif %}">
+                </div>
+                <div class="input_team">
+                    <label>Киберспортивная команда:</label>
+                    <select id="team" name="team">
+                        <option value="" {% if team == '' %}selected{% endif %}>Все</option>
+                        <option value="yes" {% if team == 'yes' %}selected{% endif %}>Да</option>
+                        <option value="no" {% if team == 'no' %}selected{% endif %}>Нет</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Фильтр</button>
+            </form>
+        </div>
+        <table class="tables_own">
+            <thead>
             <tr>
-                <td>{{ i['rank'] }}</td>
-                <td>
-                    {% set name = '' %}
-                    {% if i['team_tag'] %}
-                        {{ name + i['team_tag'] + '.' }}
-                    {% endif %}
-                    {{ name + i['name'] }}
-                    {% if i['sponsor'] %}
-                        {{ name + '.' + i['sponsor'] }}
-                    {% endif %}
-                    {{ name|replace(" ", "") }}
-                </td>
-                <td>
-                    {% if i['country'] %}
-                        <img src="https://flagsapi.com/{{ i['country']|upper }}/flat/24.png">
-                    {% endif %}
-                </td>
+                <th scope="col">Позиция в дивизионе</th>
+                <th scope="col">Игрок</th>
+                <th scope="col"></th>
             </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for i in data %}
+                <tr>
+                    <td>{{ i['rank'] }}</td>
+                    <td>
+                        {% set name = '' %}
+                        {% if i['team_tag'] %}
+                            {% set name = name + i['team_tag'] + '.' %}
+                        {% endif %}
+                         {% set name = name + i['name'] %}
+                        {% if i['sponsor'] %}
+                            {% set name = name + '.' + i['sponsor'] %}
+                        {% endif %}
+                         {{ name.replace(" ", "") }}
+                    </td>
+                    <td>
+                        {% if i['country'] %}
+                            <img src="https://flagsapi.com/{{ i['country']|upper }}/flat/24.png">
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </main>
 <footer></footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
