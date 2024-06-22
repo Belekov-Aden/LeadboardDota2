@@ -31,20 +31,28 @@
     </ul>
 </header>
 <main>
-    <table class="table table-striped">
+    <table class="tables_own">
         <thead>
         <tr>
             <th scope="col">Позиция в дивизионе</th>
             <th scope="col">Игрок</th>
-            <th scope="col">Страна</th>
         </tr>
         </thead>
         <tbody>
         {% for i in reqion %}
             <tr>
                 <th>{{ loop.index }}</th>
-                <th>{{ i['team_tag'] }}.{{ i['name'] }}.{{ i['sponsor'] }}</th>
-                <th>{{ i['country'] }}</th>
+                <th>
+                    <div class="name_country">
+                        <p>{{ i['team_tag'] }}.{{ i['name'] }}.{{ i['sponsor'] }}</p>
+                        <div class="images">
+                            {% if i['country'] %}
+                                <img src="https://flagsapi.com/{{ i['country']|upper }}/flat/24.png">
+                            {% else %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </th>
             </tr>
         {% endfor %}
         </tbody>
