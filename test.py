@@ -1,21 +1,30 @@
-import pprint
-
 import datetime
 import requests
 import json
+import time
+import schedule
 
-reqion = 'europe'
 
-data: dict = requests.get(
-    f'https://www.dota2.com/webapi/ILeaderboard/GetDivisionLeaderboard/v0001?division={reqion}&leaderboard=0').json()
+def return_time(time: int):
+    return datetime.datetime.fromtimestamp(time)
 
-pprint.pprint(data.get('leaderboard')[1:5 + 1])
 
-# {
-#     'country': 'bg',
-#     'name': 'bzm',
-#     'rank': 6,
-#     'sponsor': '[1pool]',
-#     'team_id': 2586976,
-#     'team_tag': 'OG'
-# }
+update = ''
+
+
+def write_data(region: str):
+    data: dict = requests.get(
+        f'https://www.dota2.com/webapi/ILeaderboard/GetDivisionLeaderboard/v0001?division={region}&leaderboard=0').json()
+    leaderboard = data.get('leaderboard')
+    global update
+    update = return_time(data.get('next_scheduled_post_time')).strptime(
+        return_time(data.get('next_scheduled_post_time')).time().strftime('%H:%M'), '%H:%M').time()
+    with open(f'{region}.json', 'w') as file:
+        json.dump(leaderboard, file)
+
+
+schedule.every().day.at("02:03").do(lambda: write_data('europe'))
+
+while True:
+    schedule.run_pending()
+    time.sleep(1)
