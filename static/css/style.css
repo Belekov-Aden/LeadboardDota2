@@ -54,7 +54,7 @@ body {
 }
 
 .tables_own th, .tables_own td {
-    padding: 12px 15px;
+    /*padding: 2px 2.5px;*/
 }
 
 .tables_own tbody tr {

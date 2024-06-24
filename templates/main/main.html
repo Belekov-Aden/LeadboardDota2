@@ -31,7 +31,9 @@
     </ul>
 </header>
 <main>
-    <p class="text-center">Количество: {{ data|length }}</p>
+    {% if data %}
+        <p class="text-center">Количество: {{ data|length }}</p>
+    {% endif %}
     <div class="tables_filters">
         <div class="filters">
             <form id="filter-form">
@@ -57,38 +59,53 @@
                 <button type="submit" class="btn btn-primary">Фильтр</button>
             </form>
         </div>
-        <table class="tables_own">
-            <thead>
-            <tr>
-                <th scope="col">Позиция в дивизионе</th>
-                <th scope="col">Игрок</th>
-                <th scope="col"></th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for i in data %}
+        {% if data %}
+            <table class="tables_own">
+                <thead>
                 <tr>
-                    <td>{{ i['rank'] }}</td>
-                    <td>
-                        {% set name = '' %}
-                        {% if i['team_tag'] %}
-                            {% set name = name + i['team_tag'] + '.' %}
-                        {% endif %}
-                        {% set name = name + i['name'] %}
-                        {% if i['sponsor'] %}
-                            {% set name = name + '.' + i['sponsor'] %}
-                        {% endif %}
-                        {{ name.replace(" ", "") }}
-                    </td>
-                    <td>
-                        {% if i['country'] %}
-                            <img src="https://flagsapi.com/{{ i['country']|upper }}/flat/24.png">
-                        {% endif %}
-                    </td>
+                    <th scope="col">Позиция в дивизионе</th>
+                    <th scope="col">Игрок</th>
+                    <th scope="col"></th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for i in data %}
+                    <tr>
+                        <td>{{ i['rank'] }}</td>
+                        <td>
+                            {% set name = '' %}
+                            {% if i['team_tag'] %}
+                                {% set name = name + i['team_tag'] + '.' %}
+                            {% endif %}
+                            {% set name = name + i['name'] %}
+                            {% if i['sponsor'] %}
+                                {% set name = name + '.' + i['sponsor'] %}
+                            {% endif %}
+                            {{ name.replace(" ", "") }}
+                        </td>
+                        <td>
+                            {% if i['country'] %}
+                                <img src="https://flagsapi.com/{{ i['country']|upper }}/flat/24.png">
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <table class="tables_own">
+                <thead>
+                <tr>
+                    <th scope="col">Позиция в дивизионе</th>
+                    <th scope="col">Игрок</th>
+                    <th scope="col"></th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        {% endif %}
+
     </div>
 
 </main>

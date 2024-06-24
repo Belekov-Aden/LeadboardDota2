@@ -1,16 +1,13 @@
-import time
+import asyncio
 import datetime
 import requests
 import json
-import schedule
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.responses import RedirectResponse
-
-from threading import Thread
 
 app = FastAPI()
 
@@ -50,17 +47,17 @@ def write_data():
         json.dump(database, file)
 
 
-def scheduler_thread():
-    schedule.every().day.at(update).do(write_data)
+async def scheduled_task():
     while True:
-        schedule.run_pending()
-        time.sleep(1)
+        await asyncio.sleep(1)
+        now = datetime.datetime.now().time().strftime('%H:%M')
+        if now == update:
+            write_data()
 
 
 @app.on_event("startup")
 async def startup_event():
-    thread = Thread(target=scheduler_thread, daemon=True)
-    thread.start()
+    asyncio.create_task(scheduled_task())
 
 
 @app.get("/", response_class=RedirectResponse)
