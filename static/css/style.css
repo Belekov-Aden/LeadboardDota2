@@ -103,6 +103,10 @@ body {
         flex-direction: column;
         align-items: center;
     }
+
+    .tables_own {
+        width: 5%;
+    }
 }
 
 /* Стили для более крупных экранов */
