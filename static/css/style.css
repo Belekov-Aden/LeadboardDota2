@@ -101,21 +101,11 @@ body {
 @media (max-width: 768px) {
     .tables_filters {
         flex-direction: column;
-        align-items: center;
     }
 
-    .tables_own {
-        width: 5%;
-    }
-}
-
-/* Стили для более крупных экранов */
-@media (min-width: 769px) {
     .filters {
-        max-width: 30%;
+        width: max-content;
+
     }
 
-    .tables_own {
-        max-width: 32%;
-    }
 }
