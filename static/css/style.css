@@ -39,7 +39,7 @@ body {
 }
 
 .tables_own {
-    width: 30%;
+    width: 32%;
     border-collapse: collapse;
     font-size: 1em;
     min-width: 400px;
@@ -54,7 +54,7 @@ body {
 }
 
 .tables_own th, .tables_own td {
-    /*padding: 2px 2.5px;*/
+    padding: 3px 3px;
 }
 
 .tables_own tbody tr {

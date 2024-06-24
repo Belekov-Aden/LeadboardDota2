@@ -68,7 +68,8 @@ async def default_region():
 @app.get("/{region}", response_class=HTMLResponse)
 async def read_root(request: Request, region: str, rank_from: int | str = None, rank_to: int | str = None,
                     country: str = None,
-                    team: str = None):
+                    team: str = None,
+                    name_player: str = None):
     with open('data.json') as file:
         data = json.load(file)
 
@@ -97,6 +98,10 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
         elif team == 'no':
             leaderboard = [player for player in leaderboard if not player.get('team_tag')]
 
+    if name_player:
+        leaderboard = [i for i in leaderboard if
+                       i.get('name') and i.get('name').lower().startswith(name_player.lower())]
+
     return templates.TemplateResponse(
         request=request, name='main/main.html',
         context={
@@ -107,6 +112,7 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
             'rank_from': rank_from,
             'rank_to': rank_to,
             'country': country,
-            'team': team
+            'team': team,
+            'name_player': name_player
         }
     )
