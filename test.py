@@ -39,7 +39,7 @@ def write_data():
 
 
 def scheduler_thread():
-    schedule.every().day.at("20:28").do(write_data)
+    schedule.every().day.at("22:54").do(write_data)
     while True:
         schedule.run_pending()
         time.sleep(1)
