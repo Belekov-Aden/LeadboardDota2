@@ -17,16 +17,8 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 
-def return_time(timestamp: int):
-    return datetime.datetime.fromtimestamp(timestamp)
-
-
-update = '02:03'  # Начальное фиксированное время
-
-
 def write_data():
     database = {}
-    global update
     for region in ['americas', 'europe', 'se_asia', 'china']:
         data = requests.get(
             f'https://www.dota2.com/webapi/ILeaderboard/GetDivisionLeaderboard/v0001?division={region}&leaderboard=0'
@@ -41,20 +33,14 @@ def write_data():
         database['next_scheduled_post_time'] = data.get('next_scheduled_post_time')
         database['time_posted'] = data.get('time_posted')
 
-        next_update = return_time(data.get('next_scheduled_post_time')).time()
-
-    update = next_update.strftime('%H:%M')
-
     with open(f'data.json', 'w') as file:
         json.dump(database, file)
 
 
 async def scheduled_task():
     while True:
-        await asyncio.sleep(1)
-        now = datetime.datetime.now().time().strftime('%H:%M')
-        if now == update:
-            write_data()
+        write_data()
+        await asyncio.sleep(3600)  # Обновление каждые 60 минут (3600 секунд)
 
 
 @app.on_event("startup")
