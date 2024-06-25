@@ -96,6 +96,12 @@ body {
     color: lightgray !important;
 }
 
+.countries {
+
+    & input {
+        width: auto;
+    }
+}
 
 /* Стили для мобильных устройств */
 @media (max-width: 768px) {

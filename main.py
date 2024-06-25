@@ -1,9 +1,11 @@
 import asyncio
 import datetime
+from collections import defaultdict
 
 import pytz
 import requests
 import json
+from iso3166 import countries_by_alpha2
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
@@ -55,7 +57,7 @@ async def default_region():
 
 @app.get("/{region}", response_class=HTMLResponse)
 async def read_root(request: Request, region: str, rank_from: int | str = None, rank_to: int | str = None,
-                    country: str = None,
+                    countries: str = None,
                     team: str = None,
                     name_player: str = None):
     with open('data.json') as file:
@@ -66,6 +68,16 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
     next_update_time = data.get('next_scheduled_post_time')
     last_update_time = data.get('time_posted')
 
+    all_countries = sorted(set(player.get('country', '').upper() for player in leaderboard if player.get('country')))
+    countries_full = defaultdict(lambda: 'Unknown Country')
+    for code in all_countries:
+        country = countries_by_alpha2.get(code)
+        if country:
+            countries_full[code] = country.name
+
+    # Преобразуем defaultdict обратно в обычный словарь для передачи в шаблон
+    countries_full = dict(countries_full)
+
     if rank_from and rank_to:
         try:
             rank_from = int(rank_from)
@@ -75,9 +87,10 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
         except ValueError:
             pass
 
-    if country:
+    if countries:
+        selected_countries = countries.split(',')
         leaderboard = [player for player in leaderboard if
-                       player.get('country') and country.lower() in player['country'].lower()]
+                       player.get('country') and player['country'].upper() in selected_countries]
 
     if team:
         if team == 'yes':
@@ -98,8 +111,9 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
             'next_update': next_update_time,
             'rank_from': rank_from,
             'rank_to': rank_to,
-            'country': country,
             'team': team,
-            'name_player': name_player
+            'name_player': name_player,
+            'countries': countries_full,
+            'selected_countries': selected_countries if countries else []
         }
     )

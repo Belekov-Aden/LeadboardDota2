@@ -58,10 +58,18 @@
                     <input type="number" id="rank_from" name="rank_from" placeholder="От" value="{{ rank_from }}">
                     <input type="number" id="rank_to" name="rank_to" placeholder="До" value="{{ rank_to }}">
                 </div>
-                <div class="input_country">
+                <div class="countries">
                     <label>Страна:</label>
-                    <input type="text" id="country" name="country" placeholder="Страна"
-                           value="{% if country %}{{ country }}{% endif %}">
+                    {% for code, name in countries.items() %}
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="countries" value="{{ code }}"
+                                   id="country-{{ code }}"
+                                   {% if selected_countries and code in selected_countries %}checked{% endif %}>
+                            <label class="form-check-label" for="country-{{ code }}">
+                                {{ name }}
+                            </label>
+                        </div>
+                    {% endfor %}
                 </div>
                 <div class="input_team">
                     <label>Киберспортивная команда:</label>
@@ -166,6 +174,15 @@
         event.preventDefault();
         const form = event.target;
         const params = new URLSearchParams(new FormData(form));
+
+        // Обработка множественного выбора стран
+        const countries = Array.from(form.querySelectorAll('input[name="countries"]:checked')).map(cb => cb.value);
+        if (countries.length > 0) {
+            params.set('countries', countries.join(','));
+        } else {
+            params.delete('countries');
+        }
+
         const region = form.querySelector('input[name="region"]').value;
         window.location.href = `/${region}?${params.toString()}`;
     });
