@@ -11,21 +11,25 @@
     <title>Dota 2 - Таблица лидеров (not official)</title>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Преобразование времени на стороне клиента
-            const utcElements = document.querySelectorAll(".utc-time");
-            utcElements.forEach(function (element) {
-                const utcTime = element.dataset.utc;
-                const localTime = new Date(utcTime);
-                element.textContent = localTime.toLocaleString();
-            });
+            // Получение временных меток с сервера
+            var timePosted = parseInt("{{ last_update }}");
+            var nextScheduledPostTime = parseInt("{{ next_update }}");
+
+            // Преобразование временных меток в объекты Date
+            var datePosted = new Date(timePosted * 1000);
+            var dateScheduled = new Date(nextScheduledPostTime * 1000);
+
+            // Отображение локального времени пользователя
+            document.getElementById("last-update").textContent = 'Последнее обновление: ' + datePosted.toLocaleString();
+            document.getElementById("next-update").textContent = 'Следующее обновление: ' + dateScheduled.toLocaleString();
         });
     </script>
 </head>
 <body>
 <header>
     <h2 class="text-center">Всемирные таблицы лидеров</h2>
-    <p class="text-center">Последнее обновление <span class="utc-time" data-utc="{{ last_update }}">{{ last_update }}</span></p>
-    <p class="text-center">Следующее обновление: <span class="utc-time" data-utc="{{ next_update }}">{{ next_update }}</span></p>
+    <p class="text-center" id="last-update"></p>
+    <p class="text-center" id="next-update"></p>
     <ul class="nav justify-content-center">
         <li class="nav-item">
             <a class="nav-link" href="{{ url_for('read_root', region='americas') }}">Америка</a>

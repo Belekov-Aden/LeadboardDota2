@@ -18,7 +18,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 def return_time(timestamp: int):
-    return datetime.datetime.fromtimestamp(timestamp, tz=pytz.UTC)
+    return datetime.datetime.fromtimestamp(timestamp)
 
 
 update = '02:03'  # Начальное фиксированное время
@@ -77,8 +77,8 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
 
     leaderboard = data.get(region)
 
-    next_update_time = return_time(data.get('next_scheduled_post_time')).isoformat()
-    last_update_time = return_time(data.get('time_posted')).isoformat()
+    next_update_time = data.get('next_scheduled_post_time')
+    last_update_time = data.get('time_posted')
 
     if rank_from and rank_to:
         try:
