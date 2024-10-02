@@ -58,18 +58,20 @@
                     <input type="number" id="rank_from" name="rank_from" placeholder="От" value="{{ rank_from }}">
                     <input type="number" id="rank_to" name="rank_to" placeholder="До" value="{{ rank_to }}">
                 </div>
-                <div class="countries">
-                    <label>Страна:</label>
-                    {% for code, name in countries.items() %}
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" name="countries" value="{{ code }}"
-                                   id="country-{{ code }}"
-                                   {% if selected_countries and code in selected_countries %}checked{% endif %}>
-                            <label class="form-check-label" for="country-{{ code }}">
-                                {{ name }}
-                            </label>
-                        </div>
-                    {% endfor %}
+                <div>
+                    <label>Страны: </label>
+                    <div class="countries" style="max-height: 300px; overflow-y: auto;">
+                        {% for code, name in countries.items() %}
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="countries" value="{{ code }}"
+                                       id="country-{{ code }}"
+                                       {% if selected_countries and code in selected_countries %}checked{% endif %}>
+                                <label class="form-check-label" for="country-{{ code }}">
+                                    {{ name }}
+                                </label>
+                            </div>
+                        {% endfor %}
+                    </div>
                 </div>
                 <div class="input_team">
                     <label>Киберспортивная команда:</label>
