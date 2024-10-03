@@ -60,6 +60,7 @@
                 </div>
                 <div>
                     <label>Страны: </label>
+                    <input type="text" class="form-control mb-2" id="country-search" placeholder="Поиск по странам...">
                     <div class="countries" style="max-height: 300px; overflow-y: auto;">
                         {% for code, name in countries.items() %}
                             <div class="form-check">
@@ -172,6 +173,20 @@
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
 <script>
+    // Функция для фильтрации списка стран
+    document.getElementById('country-search').addEventListener('input', function () {
+        let filter = this.value.toLowerCase();
+        let countries = document.querySelectorAll('.form-check');
+
+        countries.forEach(function (country) {
+            let label = country.querySelector('.form-check-label').textContent.toLowerCase();
+            if (label.includes(filter)) {
+                country.style.display = '';
+            } else {
+                country.style.display = 'none';
+            }
+        });
+    });
     document.getElementById('filter-form').addEventListener('submit', function (event) {
         event.preventDefault();
         const form = event.target;
