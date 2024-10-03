@@ -109,11 +109,11 @@
                             {% if i['team_tag'] %}
                                 {% set name = name + i['team_tag'] + '.' %}
                             {% endif %}
-                            {% set name = name + i['name'] %}
+                            {% set name = name + '<b>' + i['name'] + '</b>' %}
                             {% if i['sponsor'] %}
                                 {% set name = name + '.' + i['sponsor'] %}
                             {% endif %}
-                            {{ name.replace(" ", "") }}
+                            {{ name.replace(" ", "") | safe }}
                         </td>
                         <td>
                             {% if i['country'] %}
