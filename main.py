@@ -73,7 +73,6 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
         if country:
             countries_full[code] = country.name
 
-    # Преобразуем defaultdict обратно в обычный словарь для передачи в шаблон
     countries_full = {k: v for k, v in sorted(dict(countries_full).items(), key=lambda item: item[1])}
 
     if rank_from and rank_to:
