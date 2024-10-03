@@ -1,8 +1,6 @@
 import asyncio
-import datetime
 from collections import defaultdict
 
-import pytz
 import requests
 import json
 from iso3166 import countries_by_alpha2
@@ -68,7 +66,7 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
     next_update_time = data.get('next_scheduled_post_time')
     last_update_time = data.get('time_posted')
 
-    all_countries = sorted(set(player.get('country', '').upper() for player in leaderboard if player.get('country')))
+    all_countries = set(player.get('country', '').upper() for player in leaderboard if player.get('country'))
     countries_full = defaultdict(lambda: 'Unknown Country')
     for code in all_countries:
         country = countries_by_alpha2.get(code)
@@ -76,7 +74,7 @@ async def read_root(request: Request, region: str, rank_from: int | str = None, 
             countries_full[code] = country.name
 
     # Преобразуем defaultdict обратно в обычный словарь для передачи в шаблон
-    countries_full = dict(countries_full)
+    countries_full = {k: v for k, v in sorted(dict(countries_full).items(), key=lambda item: item[1])}
 
     if rank_from and rank_to:
         try:
